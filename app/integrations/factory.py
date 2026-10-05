@@ -17,31 +17,31 @@ class DisabledNotificationProvider:
 def get_hubspot_provider() -> CRMProvider | DisabledCRMProvider:
     if not settings.hubspot_enabled:
         return DisabledCRMProvider()
+    if settings.hubspot_access_token:
+        return HubSpotProvider(settings.hubspot_access_token)
     if settings.mock_ai:
         return MockHubSpotProvider()
-    if not settings.hubspot_access_token:
-        return UnconfiguredHubSpotProvider()
-    return HubSpotProvider(settings.hubspot_access_token)
+    return UnconfiguredHubSpotProvider()
 
 
 def get_slack_provider() -> NotificationProvider | DisabledNotificationProvider:
     if not settings.slack_enabled:
         return DisabledNotificationProvider()
+    if settings.slack_webhook_url:
+        return SlackWebhookProvider(settings.slack_webhook_url)
     if settings.mock_ai:
         return MockSlackProvider()
-    if not settings.slack_webhook_url:
-        return UnconfiguredSlackProvider()
-    return SlackWebhookProvider(settings.slack_webhook_url)
+    return UnconfiguredSlackProvider()
 
 
 def get_email_provider():
-    # Mock AI mode is the local development safety boundary: never use Resend there.
+    production_enabled = settings.resend_enabled and settings.app_env.lower() in {"production", "prod"}
+    if production_enabled:
+        if settings.resend_api_key and settings.resend_from_email:
+            return ResendEmailProvider(settings.resend_api_key, settings.resend_from_email)
+        if settings.mock_ai:
+            return MockEmailProvider()
+        return UnconfiguredResendProvider()
     if settings.mock_ai:
         return MockEmailProvider()
-    if not settings.resend_enabled:
-        return DisabledEmailProvider()
-    if settings.app_env.lower() not in {"production", "prod"}:
-        return DisabledEmailProvider()
-    if not settings.resend_api_key or not settings.resend_from_email:
-        return UnconfiguredResendProvider()
-    return ResendEmailProvider(settings.resend_api_key, settings.resend_from_email)
+    return DisabledEmailProvider()

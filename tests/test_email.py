@@ -25,6 +25,11 @@ def test_email_factory_selects_mock_disabled_resend_and_unconfigured(monkeypatch
     monkeypatch.setattr(settings, "app_env", "development")
     assert isinstance(get_email_provider(), MockEmailProvider)
 
+    monkeypatch.setattr(settings, "app_env", "production")
+    monkeypatch.setattr(settings, "resend_api_key", "test-key")
+    monkeypatch.setattr(settings, "resend_from_email", "Nexora <hello@example.com>")
+    assert isinstance(get_email_provider(), ResendEmailProvider)
+
     monkeypatch.setattr(settings, "mock_ai", False)
     monkeypatch.setattr(settings, "resend_enabled", False)
     assert isinstance(get_email_provider(), DisabledEmailProvider)

@@ -1,3 +1,5 @@
+import pytest
+
 from app.config import settings
 from app.integrations.base import CRMResult
 from app.integrations.factory import get_hubspot_provider, get_slack_provider
@@ -22,11 +24,29 @@ def test_provider_selection_uses_mock_or_live(monkeypatch):
     assert isinstance(get_hubspot_provider(), MockHubSpotProvider)
     assert isinstance(get_slack_provider(), MockSlackProvider)
 
-    monkeypatch.setattr(settings, "mock_ai", False)
     monkeypatch.setattr(settings, "hubspot_access_token", "test-token")
     monkeypatch.setattr(settings, "slack_webhook_url", "https://hooks.slack.test/mock")
     assert isinstance(get_hubspot_provider(), HubSpotProvider)
     assert isinstance(get_slack_provider(), SlackWebhookProvider)
+    from app.services import MockAIProvider, get_ai_provider
+    assert isinstance(get_ai_provider(), MockAIProvider)
+
+
+def test_mock_ai_with_configured_hubspot_reports_live_adapter(client, monkeypatch):
+    monkeypatch.setattr(settings, "mock_ai", True)
+    monkeypatch.setattr(settings, "hubspot_enabled", True)
+    monkeypatch.setattr(settings, "hubspot_access_token", "test-hubspot-token")
+    monkeypatch.setattr("app.integrations.hubspot.urlopen", lambda *_args, **_kwargs: pytest.fail("HubSpot must not be called"))
+
+    provider = get_hubspot_provider()
+    assert isinstance(provider, HubSpotProvider)
+    assert provider.mode == "live"
+
+    health = client.get("/api/health")
+    assert health.status_code == 200
+    assert health.json()["integrations"]["ai_provider"] == "mock"
+    assert health.json()["integrations"]["hubspot"] == "configured"
+    assert "test-hubspot-token" not in health.text
 
 
 def test_mock_hubspot_upsert_and_association_are_deterministic():

@@ -61,7 +61,7 @@ The workflow is backed by PostgreSQL. Lead intake and analysis are recorded with
 
 ### Local development
 
-Use `MOCK_AI=true` for no-credit development. The `.env.example` file sets this mode and leaves provider credentials blank; no OpenAI key is required. Mock AI, HubSpot, Slack, and email providers make no external requests.
+Use `MOCK_AI=true` for no-credit AI development. This selects local AI analysis and requires no OpenAI key. Integration modes are configured independently: enabled HubSpot or Slack with credentials can make live requests, and configured production Resend can send email after human approval, even while `MOCK_AI=true`. To prevent all external integration requests, leave `HUBSPOT_ENABLED`, `SLACK_ENABLED`, and `RESEND_ENABLED` set to `false` as in `.env.example`.
 
 1. Copy `.env.example` to `.env` if `.env` does not already exist. Preserve your existing `.env` if you already have one.
 2. Install Python 3.11 or newer and the project dependencies.
@@ -130,11 +130,11 @@ Set configuration in `.env` for local development or through deployment secrets 
 | `CORS_ORIGINS` | Comma-separated allowed browser origins; example value is `http://localhost:8000`. |
 | `APP_ENV` | Application environment. Live Resend requires `production` (or `prod`). |
 
-When `MOCK_AI=true`, enabled HubSpot and Slack integrations select their mock adapters, and email uses Mock Email. With `MOCK_AI=false`, enabled HubSpot and Slack require credentials to use their live adapters. Resend is selected only when `APP_ENV=production`, `MOCK_AI=false`, `RESEND_ENABLED=true`, and both Resend settings are present. In non-production with live AI mode, email remains disabled. Missing OpenAI configuration in live AI mode causes the lead to be saved without a classification and records an error/review event.
+`MOCK_AI` selects only the AI provider. When HubSpot or Slack is enabled and its credential is present, the corresponding live adapter is selected regardless of `MOCK_AI`; when enabled credentials are absent, mock mode uses the mock adapter and live mode reports the integration as unconfigured. Resend is selected only when `APP_ENV=production`, `RESEND_ENABLED=true`, and both Resend settings are present, regardless of `MOCK_AI`. Otherwise, mock AI mode uses Mock Email; live AI mode retains the disabled/unconfigured fallback. Missing OpenAI configuration in live AI mode causes the lead to be saved without a classification and records an error/review event.
 
 ## Integrations and email approval
 
-HubSpot upserts qualified leads and records CRM outcomes. Slack can notify the sales team about qualified leads, required human review, or integration errors. Both integrations are disabled by default and can be exercised locally with `MOCK_AI=true` and their respective `*_ENABLED=true` setting, without credentials or HTTP requests.
+HubSpot upserts qualified leads and records CRM outcomes. Slack can notify the sales team about qualified leads, required human review, or integration errors. Both integrations are disabled by default. With `MOCK_AI=true`, enable either integration without its live credential to use its mock adapter without HTTP requests. If the relevant credential is present, the enabled integration uses its live adapter even when AI remains mocked.
 
 The email body uses the existing response draft; the application does not generate a second AI response for sending. A reviewer explicitly approves the draft through `POST /api/leads/{id}/approve` or the dashboard’s **Approve & Send** action. A successful send is recorded for that analysis; a repeated request returns an already-sent status. Failed sends record a safe failure event and may be retried. For live Resend, set `APP_ENV=production`, `MOCK_AI=false`, `RESEND_ENABLED=true`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` through deployment secrets. The configured sender must be accepted by the Resend account before live delivery.
 

@@ -59,7 +59,7 @@ class ResendEmailProvider:
         payload = {"from": self._from_email, "to": [recipient], "subject": subject, "text": body}
         request = Request("https://api.resend.com/emails", data=json.dumps(payload).encode("utf-8"),
                           headers={"Authorization": f"Bearer {self._api_key}",
-                                   "Content-Type": "application/json"}, method="POST")
+                                   "Content-Type": "application/json", "User-Agent": "NEXORA-LeadFlow/1.0"}, method="POST")
         try:
             with urlopen(request, timeout=self._timeout) as response:
                 data = json.loads(response.read().decode("utf-8"))
@@ -68,7 +68,7 @@ class ResendEmailProvider:
                 return EmailResult(False, self.mode, "failed", error_category="malformed_response")
             return EmailResult(True, self.mode, "sent", message_id)
         except HTTPError as exc:
-            logger.warning("resend_request_failed status=%s", exc.code)
+            logger.warning("resend_request_failed status=%s body=%s", exc.code, exc.read().decode("utf-8", errors="replace"))
             return EmailResult(False, self.mode, "failed", error_category=f"http_{exc.code}")
         except (TimeoutError, URLError):
             return EmailResult(False, self.mode, "failed", error_category="connection_error")

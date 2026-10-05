@@ -17,6 +17,11 @@ def default_to_real_provider(monkeypatch):
     monkeypatch.setattr(settings, "hubspot_enabled", False)
     monkeypatch.setattr(settings, "slack_enabled", False)
     monkeypatch.setattr(settings, "resend_enabled", False)
+    monkeypatch.setattr(settings, "hubspot_access_token", None)
+    monkeypatch.setattr(settings, "slack_webhook_url", None)
+    monkeypatch.setattr(settings, "resend_api_key", None)
+    monkeypatch.setattr(settings, "resend_from_email", None)
+    monkeypatch.setattr(settings, "app_env", "development")
 
 @pytest.fixture
 def engine():
