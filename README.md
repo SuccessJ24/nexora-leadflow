@@ -53,9 +53,27 @@ The workflow is backed by PostgreSQL. Lead intake and analysis are recorded with
 
 ## Screenshots
 
-> **Dashboard overview:** screenshot placeholder — add a dashboard capture here when available.
+The screenshots use synthetic demo leads and `.example` email addresses. They were captured locally with mock AI and external integrations disabled; no live CRM, notification, or email requests were made.
 
-> **Lead detail and approval workflow:** screenshot placeholder — add a lead-detail capture here when available.
+### Dashboard and lead queue
+
+![Dashboard metrics and recent leads](screenshots/dashboard-overview.jpg)
+
+### AI qualification and confidence
+
+![HOT lead AI analysis with confidence and recommended action](screenshots/lead-detail-hot.jpg)
+
+### Human review and missing information
+
+![Lead requiring human review because key information is missing](screenshots/lead-detail-review.jpg)
+
+### Response draft and approval gate
+
+![Prepared response draft with explicit Approve and Send control](screenshots/approval-workflow.jpg)
+
+### Workflow in motion
+
+![Animated walkthrough of dashboard, analysis, review, and approval](screenshots/leadflow-demo.gif)
 
 ## Quick Start
 
