@@ -2,7 +2,7 @@ services:
   - type: web
     name: nexora-leadflow
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
@@ -20,29 +20,19 @@ services:
       - key: ADMIN_PASSWORD
         sync: false
       - key: MOCK_AI
-        value: "false"
+        value: "true"
       - key: AI_PROVIDER
         value: gemini
-      - key: GEMINI_API_KEY
-        sync: false
       - key: GEMINI_MODEL
         value: gemini-3.8-flash
       - key: OPENAI_MODEL
         value: gpt-4o-mini
       - key: HUBSPOT_ENABLED
         value: "true"
-      - key: HUBSPOT_ACCESS_TOKEN
-        sync: false
       - key: SLACK_ENABLED
         value: "true"
-      - key: SLACK_WEBHOOK_URL
-        sync: false
       - key: RESEND_ENABLED
         value: "true"
-      - key: RESEND_API_KEY
-        sync: false
-      - key: RESEND_FROM_EMAIL
-        sync: false
       - key: INTEGRATION_TIMEOUT_SECONDS
         value: "5"
       - key: AI_CONFIDENCE_THRESHOLD
@@ -56,5 +46,5 @@ databases:
   - name: nexora-leadflow-db
     databaseName: leadflow
     user: leadflow
-    plan: basic-256mb
+    plan: free
     region: oregon
