@@ -17,6 +17,7 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql+psycopg://leadflow:leadflow@db:5432/leadflow
+      PORT: 8000
     ports:
       - "8000:8000"
     depends_on:

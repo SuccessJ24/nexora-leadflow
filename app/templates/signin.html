@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d36">
+  <title>Sign in · NEXORA LeadFlow</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="signin-page">
+  <header class="signin-header">
+    <a class="brand" href="/" aria-label="NEXORA LeadFlow home">
+      <span class="brand-mark" aria-hidden="true">N</span>
+      <span>NEXORA <span class="brand-light">LEADFLOW</span></span>
+    </a>
+    <a class="header-link" href="/demo">Explore public demo <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="signin-layout">
+    <section class="signin-story" aria-labelledby="story-title">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> HUMAN-GUIDED SALES OPERATIONS</div>
+      <h1 id="story-title">Every good lead deserves a <span>clear next step.</span></h1>
+      <p class="story-copy">Bring inbound inquiries, practical AI analysis, and thoughtful human follow-up together in one focused workspace.</p>
+      <div class="story-flow" aria-label="Workflow: new lead, AI analysis, human review, next step">
+        <div class="flow-step"><span class="flow-icon">↗</span><span><b>New lead</b><small>One shared inbox</small></span></div>
+        <span class="flow-connector" aria-hidden="true"></span>
+        <div class="flow-step"><span class="flow-icon flow-ai">✳</span><span><b>AI analysis</b><small>Structured signals</small></span></div>
+        <span class="flow-connector" aria-hidden="true"></span>
+        <div class="flow-step"><span class="flow-icon flow-human">✓</span><span><b>Human review</b><small>People stay in control</small></span></div>
+      </div>
+      <p class="story-footnote">Built for B2B agencies that want a more considered way to work their pipeline.</p>
+    </section>
+
+    <section class="signin-card" aria-labelledby="welcome-title">
+      <div class="card-kicker">YOUR LEAD WORKSPACE</div>
+      <h2 id="welcome-title">Welcome to LeadFlow</h2>
+      {% if auth_enabled %}
+      <p class="signin-intro">Sign in to access your private lead workspace.</p>
+      {% if error %}<p class="signin-error" role="alert">{{ error }}</p>{% endif %}
+      <form class="auth-form" method="post" action="/signin">
+        <label>Email<input name="email" type="email" autocomplete="username" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="demo-button" type="submit">Sign in <span aria-hidden="true">→</span></button>
+      </form>
+      {% else %}
+      <p class="signin-intro">Explore the public product preview using synthetic lead data.</p>
+      <div class="preview-note" role="note"><span class="preview-note-icon" aria-hidden="true">i</span><p><b>Read-only demo</b><br>Sample records are synthetic. Workspace data and reviewer actions require private sign-in.</p></div>
+      <a class="demo-button" href="/demo">Explore the LeadFlow demo <span aria-hidden="true">→</span></a>
+      <a class="signin-request-link" href="/request">Have a project in mind? Tell us what you need</a>
+      {% endif %}
+      <div class="signin-divider"><span>WHAT YOU CAN EXPLORE</span></div>
+      <ul class="preview-list">
+        <li><span>01</span> Lead qualification and confidence</li>
+        <li><span>02</span> Review queue and response drafts</li>
+        <li><span>03</span> Human decisions and workflow history</li>
+      </ul>
+      <p class="privacy-note"><span aria-hidden="true">◇</span> Public preview · Private workspace access</p>
+    </section>
+  </main>
+
+  <footer class="signin-footer">
+    <span>© NEXORA AI · LEADFLOW</span>
+    <span>Human-guided lead qualification</span>
+  </footer>
+</body>
+</html>

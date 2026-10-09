@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d36">
+  <title>Talk with Nexora · NEXORA LeadFlow</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="request-page">
+  <header class="request-header">
+    <a class="brand" href="/signin" aria-label="NEXORA LeadFlow home">
+      <span class="brand-mark" aria-hidden="true">N</span>
+      <span>NEXORA <span class="brand-light">LEADFLOW</span></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/demo">View product demo</a>
+      <a class="request-nav-login" href="/signin">Team sign in</a>
+    </nav>
+  </header>
+
+  <main class="request-layout">
+    <section class="request-story">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> A THOUGHTFUL FIRST STEP</div>
+      <h1>Let's talk about <span>your next stage of growth.</span></h1>
+      <p class="request-intro">Tell us a little about your business and what you’re working toward. Our team will review your note and follow up with a relevant next step.</p>
+      <div class="request-points">
+        <div><span class="request-point-icon">01</span><p><b>Share your goals</b><small>A few details help us understand what matters to you.</small></p></div>
+        <div><span class="request-point-icon">02</span><p><b>Get a considered response</b><small>We’ll review your request before recommending a conversation.</small></p></div>
+        <div><span class="request-point-icon">03</span><p><b>Reviewed by our team</b><small>Your submission goes to the team workspace for consideration.</small></p></div>
+      </div>
+      <a class="request-demo-link" href="/demo">Prefer to look around first? Explore the product demo <span aria-hidden="true">→</span></a>
+    </section>
+
+    <section class="request-card" aria-labelledby="request-title">
+      <div class="request-card-kicker">PROJECT INQUIRY</div>
+      <h2 id="request-title">Tell us what you need</h2>
+      <p class="request-card-copy">No account needed. Required fields are marked with <span>*</span>.</p>
+      {% if errors %}<div class="request-errors" role="alert"><b>Please review your request</b><ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
+      <form method="post" action="/request" class="request-form">
+        <div class="request-field-grid">
+          <label>Full name <span>*</span><input name="name" autocomplete="name" maxlength="160" required value="{{ values.get('name') or '' }}" placeholder="Your name"></label>
+          <label>Work email <span>*</span><input name="email" type="email" autocomplete="email" maxlength="320" required value="{{ values.get('email') or '' }}" placeholder="you@company.com"></label>
+          <label>Company <span>*</span><input name="company" autocomplete="organization" maxlength="200" required value="{{ values.get('company') or '' }}" placeholder="Company name"></label>
+          <label>Website<input name="website" type="url" autocomplete="url" maxlength="500" value="{{ values.get('website') or '' }}" placeholder="https://company.com"></label>
+          <label>Industry<input name="industry" maxlength="120" value="{{ values.get('industry') or '' }}" placeholder="e.g. SaaS or fintech"></label>
+          <label>Monthly budget<input name="budget" maxlength="120" value="{{ values.get('budget') or '' }}" placeholder="Optional estimate"></label>
+          <label class="request-field-wide">When are you looking to get started?<input name="timeline" maxlength="200" value="{{ values.get('timeline') or '' }}" placeholder="e.g. This quarter, or still exploring"></label>
+          <label class="request-field-wide">What would you like help with? <span>*</span><textarea name="message" minlength="5" maxlength="12000" required placeholder="Share your goals, challenges, and any services you’re considering.">{{ values.get('message') or '' }}</textarea></label>
+        </div>
+        <label class="request-consent"><input type="checkbox" name="consent" value="yes" required><span>I agree that Nexora AI may contact me about this request.</span></label>
+        <div class="request-honeypot" aria-hidden="true"><label>Leave this field empty<input name="middle_name" tabindex="-1" autocomplete="off"></label></div>
+        <button class="request-submit" type="submit">Send your inquiry <span aria-hidden="true">→</span></button>
+        <p class="request-form-note">Your inquiry will be reviewed by our team. Submitting this form does not send an automated email.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="request-footer"><span>© NEXORA AI · LEADFLOW</span><span>Human-guided lead qualification</span></footer>
+</body>
+</html>

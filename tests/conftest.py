@@ -22,6 +22,12 @@ def default_to_real_provider(monkeypatch):
     monkeypatch.setattr(settings, "resend_api_key", None)
     monkeypatch.setattr(settings, "resend_from_email", None)
     monkeypatch.setattr(settings, "app_env", "development")
+    monkeypatch.setattr(settings, "auth_enabled", False)
+    monkeypatch.setattr(settings, "session_secret_key", None)
+    monkeypatch.setattr(settings, "admin_email", None)
+    monkeypatch.setattr(settings, "admin_password", None)
+    monkeypatch.setattr(settings, "ai_provider", "openai")
+    monkeypatch.setattr(settings, "gemini_api_key", None)
 
 @pytest.fixture
 def engine():
